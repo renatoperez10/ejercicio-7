@@ -75,3 +75,63 @@ const equipos = [
     },
   },
 ];
+
+const equiposMayoresEdad = (listaEquipos, edadFiltrar) => listaEquipos.filter((equipo) => equipo.asignado.empleado.edad > edadFiltrar);
+
+const equiposProvincia = (listaEquipos, provinciaFiltrar) => listaEquipos
+  .filter((equipo) => equipo.asignado.provincia.toLowerCase() === provinciaFiltrar.toLowerCase());
+
+const provincias = (listaEquipos) => Array.from(new Set(
+  listaEquipos
+    .map((equipo) => equipo.asignado.provincia)
+));
+
+const puestos = (listaEquipos) => listaEquipos.map((equipo) => equipo.asignado.empleado.puesto);
+
+const edadMedia = (listaEquipos) => Math.round((
+  listaEquipos
+    .reduce(((acumulador, valorActual) => acumulador + valorActual.asignado.empleado.edad), 0)
+  / listaEquipos.length) * 100) / 100;
+
+const equiposPorEdad = (listaEquipos) => listaEquipos
+  .sort((a, b) => ((a.asignado.empleado.edad > b.asignado.empleado.edad) ? 1 : -1));
+
+const equiposTipo = (listaEquipos, tipoFiltrar) => listaEquipos
+  .filter((equipo) => equipo.tipo.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    === tipoFiltrar.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
+
+const trabajadoresTipo = (listaEquipos, tipoFiltrar) => equiposTipo(listaEquipos, tipoFiltrar).map((equipo) => equipo.asignado.empleado);
+
+const equiposPorTipo = (listaEquipos) => {
+  const listaRetornar = [];
+  const listaTipos = Array.from(new Set(
+    listaEquipos.map((equipo) => equipo.tipo)
+  ));
+  for (const elemento of listaTipos) {
+    const objetoLista = {
+      tipo: elemento,
+      equipos: [equiposTipo(listaEquipos, elemento)]
+    };
+    listaRetornar.push(objetoLista);
+  }
+  return listaRetornar;
+};
+
+const equiposTipoLocalidad = (listaEquipos, tipoFiltrar, localidadFiltrar) => {
+  let listaRetornar = equiposTipo(listaEquipos, tipoFiltrar);
+  listaRetornar = equiposProvincia(listaRetornar, localidadFiltrar);
+  return listaRetornar;
+};
+
+const resumenEquipos = (listaEquipos) => {
+  const listaRetornar = [];
+  for (const equipo of listaEquipos) {
+    const objetoEquipo = {
+      id: equipo.id,
+      poblacion: equipo.asignado.poblacion,
+      provincia: equipo.asignado.provincia
+    };
+    listaRetornar.push(objetoEquipo);
+  }
+  return listaRetornar;
+};
