@@ -1,3 +1,23 @@
 .console {
   margin: 70px 10px;
+  height: 600px;
+  max-height: 600px;
+  background: #1e1e1e;
+  color:#119667;
+}
+
+.boton {
+  height: max-content;
+  margin: 10px;
+}
+
+main > article{
+  background: #90a081;
+}
+
+main > aside {
+  background: #f1ac7b;
+}
+main > article {
+  margin-left: 10px ;
 }
